@@ -62,5 +62,12 @@ spec:
       }
     }
 
+    stage('DockerRun'){
+      steps {
+        container('maven'){
+          sh 'docker run my-app:$BUILD_NUMBER'
+        }
+      }
+    }
 }
 
