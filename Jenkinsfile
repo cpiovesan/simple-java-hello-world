@@ -55,19 +55,34 @@ spec:
     }
 
     stage('Docker'){
+      when {
+        anyOf {
+          branch 'master';
+          branch 'develop'
+        }
+      }
       steps {
-        container('maven'){
+        container('docker'){
           sh 'docker build -t my-app:$BUILD_NUMBER .'
         }
       }
     }
 
     stage('DockerRun'){
+      when {
+        branch 'master';
+      }
       steps {
-        container('maven'){
+        container('docker'){
           sh 'docker run my-app:$BUILD_NUMBER'
         }
       }
     }
-}
 
+
+  post {
+    always {
+      junit 'target/surefire-reports/*.xml'
+    }
+  }
+}
